@@ -1,0 +1,383 @@
+;;
+;; Spike's .emacs
+;;
+;; spike@spikewang.org
+
+;;    ___ _ __ ___   __ _  ___ ___
+;;   / _ \ '_ ` _ \ / _` |/ __/ __|
+;;  |  __/ | | | | | (_| | (__\__ \
+;; (_)___|_| |_| |_|\__,_|\___|___/
+;;
+
+;; This file is NOT part of GNU Emacs.
+
+;;
+;; Load path
+;; 
+;; The second one is special for color-theme installed by macport on Mac. If
+;; it's not used or moved to the lisp directory. It can be removed.
+;;
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
+
+(setenv "PATH" "/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X6/bin")
+(setenv "TERM" "xterm-256color")
+
+(setq exec-path (append exec-path '("/opt/local/bin")))
+
+(fset 'yes-or-no-p 'y-or-n-p)             ;; use "y or n" answers instead of "yes or no"
+(setq auto-save-default nil)              ;; disable Emacs's auto-save
+(setq backup-by-copying t)                ;; stop Emac's auto-backup changing file's date
+(setq c-basic-offset 4)
+(setq default-fill-column 80)             ;; set default column width
+(setq inhibit-startup-message t)          ;; disable the welcome screen
+(setq make-backup-files nil)              ;; disable Emac's auto-backup
+(setq next-line-add-newlines nil)
+(setq ns-pop-up-frames nil)               ;; never open new frame for the new file
+(setq scroll-preserve-screen-position t)  ;; Scroll without moving cursor
+(setq-default indent-tabs-mode t)         ;; Insert spaces instead of tabs
+(setq-default indicate-empty-lines t)     ;; show empty lines in the file
+(setq-default show-trailing-whitespace t) ;; identify trailing whitespace at the end of the line
+(setq-default tab-width 4)                ;; set tab width to 4
+
+;;
+;; Ack Mode
+;;
+(autoload 'ack-and-a-half-same "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half-find-file-samee "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half-find-file "ack-and-a-half" nil t)
+
+;; Create shorter aliases
+(defalias 'ack 'ack-and-a-half)
+(defalias 'ack-same 'ack-and-a-half-same)
+(defalias 'ack-find-file 'ack-and-a-half-find-file)
+(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+
+;;
+;; auto-fill-mode
+;;
+;; Enable for all major modes.
+;;
+;;(setq-default auto-fill-function 'do-auto-fill)
+;;(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'c-mode-common-hook (lambda () (auto-fill-mode 1)))
+
+;; Anything Mode
+;;
+;; Quicksilver for Emacs.
+;;
+
+;;(require 'anything)
+;;(require 'anything-config)
+
+;;(setq anytshing-sources
+;;      (list anything-c-source-buffers
+;;             anything-c-source-file-name-history
+;;             anything-c-source-locate
+;;             anything-c-source-info-pages
+;;             anything-c-source-man-pages
+;;             anything-c-source-file-cache
+;;             anything-c-source-emacs-commands))
+
+;; (global-set-key (kbd "M-X") 'anything)
+
+;;
+;; Bell
+;;
+;; Disable all bells, including both audio bell and visual bell all the time.
+;;
+(setq ring-bell-function 'ignore)
+(setq visible-bell t)
+
+;;
+;; blink-cursor-mode
+;;
+(blink-cursor-mode 0)
+
+;;
+;; cmake-mode
+;;
+(autoload 'cmake-mode "cmake-mode" "Mode for edit cmake file" t)
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt$\\|\\.cmake\\'" . cmake-mode))
+
+;;
+;; color-theme
+;;
+;; Only use this mode on GUI. Using zenburn mode as default.  Inside terminal,
+;; use the default color theme of the termial.
+;;
+(when window-system
+    (require 'color-theme)
+    (color-theme-initialize)
+    (load "~/.emacs.d/lisp/zenburn")
+    (color-theme-zenburn)
+)
+
+;;
+;; column-number-mode
+;;
+;; Indicate the exact column location on the modeline.
+;;
+(column-number-mode t)
+
+;;
+;; cua-selection-mode
+;;
+;; Only enable the CUA selection mode to have rectangle selection, global mark
+;; mode, etc, but with Emacs standard key bindings
+;;
+(cua-selection-mode t)
+
+;;
+;; gtags-mode
+;;
+;; gtags.el should come with the global package and under one of the default
+;; load paths. This section assumes that the gtags.el or gtags.elc can be 
+;; found by default to be loaded correctly.
+;;
+;; Notice that, "require" didn't work in several cases, auto-load works, not
+;; entirely sure that why it happened, but try auto-load if require doesn't 
+;; work
+;;
+(defun gtags-root-dir ()
+  "Check if emacs available here"
+  (= 0 (call-process "global" nil nil nil "-pr")))
+
+(defun gtags-update ()
+    "Make GTAGS incremental update"
+    (call-process "global" nil nil nil "-u"))
+
+(defun gtags-update-hook ()
+    (when (gtags-dir)
+      (gtags-update)))
+
+(add-hook 'gtags-mode-hook
+  (lambda()
+    (local-set-key (kbd "M-.") 'gtags-find-tag)    ; find definiation
+    (local-set-key (kbd "M-,") 'gtags-find-rtag))) ; find all its occurrences
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (require 'gtags)
+    (gtags-mode t)))
+
+(setq gtags-select-buffer-single t)
+
+;;
+;; global-font-lock-mode
+;;
+;; Enable color syntax all the time
+;;
+(global-font-lock-mode 1)
+
+
+;;
+;; google-c-style
+;;
+;; Enable Google C/C++ Style for c-mode
+;;
+;;(autoload 'google-set-c-style "google-c-style" "Google C/C++ Style" t)
+
+;;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+;;(add-hook 'c-mode-common-hook 'google-set-c-style)
+
+
+;;
+;; hide-show-mode
+;;
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+(add-hook 'lisp-mode-hook       'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
+
+(global-set-key (kbd "C-c s")  'hs-show-block)
+(global-set-key (kbd "C-c h")  'hs-hide-block)
+
+
+;;
+;; Highlight
+;;
+;; In every buffer, the line which contains the cursor will be fully
+;; highlighted
+(global-hl-line-mode t)
+
+;;
+;; ido-mode
+;;
+(ido-mode 1)
+
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(setq ido-use-url-at-point nil)   ;; don't use URL
+(setq ido-max-prospects 8)        ;; don't spam my minibuffer
+(setq ido-file-extensions-order '(".cpp" ".h" ".emacs" ".log"))
+
+;;
+;; global-linum-mode
+;;
+;; The line number will be displayed on the left margin
+;;
+;;(global-linum-mode 1)
+;;(setq linum-format " %d ")
+
+;;
+;; makefile-mode
+;;
+;; Enable extensive whitespace indication in makefile mode, since tab or space
+;; are very tricky in makefile
+;;
+(add-hook 'makefile-mode-hook (lambda() (whitespace-mode t)))
+
+;;
+;; menu-bar-mode
+;;
+;; Disable menubar mode all the time. On GUI mode, there is no such mode
+;; available
+;;
+(unless window-system (menu-bar-mode -1))
+
+;;
+;; paren-mode
+;;
+;; Show brackets match in source file
+;;
+(show-paren-mode t)
+(setq show-paren-style 'mixed)
+
+;;
+;; Saveplace
+;;
+;; Save the last visited position in the file and redirect the file to be used
+;; to our .emacs.d directory
+;;
+(setq-default save-place t)
+(setq save-place-file "~/.emacs.d/saveplace")
+(require 'saveplace)
+
+;;
+;; scroll-bar-mode
+;;
+;; This mode is only available on GUI mode. It's pretty annoying to see it.
+;; Especially, it's not very useful, disable it by default.
+;;
+(when window-system (scroll-bar-mode nil))
+
+;;
+;; size-indication-mode
+;;
+;; Show the size of the file on modeline and indicate the percentage where we
+;; are
+;;
+(size-indication-mode t)
+
+;;
+;; Switch between header and implementation file
+;;
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (local-set-key (kbd "C-c o") 'ff-find-other-file)))
+
+
+;;
+;; Tab Settings
+;;
+
+;;
+;; tool-bar-mode
+;;
+;; Always disable toolbar. It's only available in the GUI mode
+;;
+(if window-system (tool-bar-mode -1))
+
+;;
+;; transient-mark-mode
+;;
+;; highlight region when mark is set.
+;;
+(transient-mark-mode t)
+
+;;
+;; uniquify
+;;
+;; make buffer name unique.
+;;
+(require 'uniquify)
+
+;;
+;; which-function-mode
+;;
+(which-function-mode t)
+
+;;
+;; Whitespace & Empty line
+;;
+;; and the end of
+;; file
+;;
+
+;;
+;; vc-cvs
+;;
+(setq vc-handled-backends nil)
+
+
+;;
+;; Window Settings
+;;
+;; Set default window size and position
+;;
+(when window-system
+    (set-frame-height   (selected-frame) 60)
+    (set-frame-width    (selected-frame) 100)
+)
+
+;;
+;; pc-selection-mode
+;;
+(if (fboundp 'pc-selection-mode)
+    (pc-selection-mode)
+    (require 'pc-select) )
+
+
+
+;; Global Key Binding
+(global-set-key "\M-g" 'goto-line)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
+;; -----------------------------------------------------------------------------
+
+;;
+;; ASCII Table
+;;
+;; show ascii table
+;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
+;;
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)
+  (switch-to-buffer "*ASCII*")
+  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+;;
+;; Kills all them buffers except scratch
+;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
+;;
+(defun nuke-all-buffers ()
+  "kill all buffers, leaving *scratch* only"
+  (interactive)
+  (mapcar (lambda (x) (kill-buffer x))
+	  (buffer-list))
+  (delete-other-windows))
+
+(require 'minimap)
+

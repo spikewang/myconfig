@@ -1,0 +1,132 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+system=`uname -s`
+
+case "$system" in
+    Darwin)
+#        . ~/.bashrc_mac
+        ;;
+    Linux)
+#        . ~/.bashrc_linux
+        ;;
+esac
+
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:/sbin:/usr/sbin:/usr/local/sbin:/opt/local/bin:$PATH
+
+#
+# Aliases
+#
+if [ $system == "Darwin" ]; then
+    ls_cmd=`which ls`
+
+    if [ $ls_cmd == "/bin/ls" ]; then
+        export CLICOLOR=1
+    else
+        alias ls='ls --color=auto'
+        alias dir='ls -l'
+        alias l='ls -alF'
+        alias la='ls -la'
+        alias ll='ls -l'
+    fi
+fi
+#
+# EMACS
+#
+alias em='emacs -nw'
+alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nq "$@"'
+
+
+#
+# GIT
+#
+git config --global alias.lg   "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+git config --global alias.st   "status"
+git config --global alias.pl   "pull"
+git config --global alias.p    "push"
+git config --global alias.c    "commit -v"
+git config --global alias.ca   "commit -v -a"
+git config --global alias.b    "branch"
+git config --global alias.co   "checkout"
+git config --global alias.cob  "checkout -b"
+git config --global alias.log  "log"
+git config --global alias.d    "diff --color --ignore-space-at-eol -b -w --ignore-blank-lines"
+git config --global alias.dw   "diff -w --word-diff=color --word-diff-regex=."
+git config --global alias.stap "stash && git stash apply"
+git config --global alias.sc   "diff --name-only --diff-filter=U"
+
+#
+# GREP
+#
+# Both Mac's BSD version and GNU version support GREP_COLORS.
+#
+export GREP_COLORS="mc=00;36:ms=31:mt=01;33:ln=31"
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+
+#
+# GO Setup
+#
+export GOPATH=$HOME/Workspace/go
+export PATH=$PATH:$GOPATH/bin
+
+
+#
+# HISTORY
+#
+# No duplicated lines in the history, and ignore some common commands in the
+# history. See bash(1) for more available options
+#
+export HISTCONTROL=erasedups
+export HISTIGNORE="&:l[sl]:[bg]f:cd:dir:pwd:exit"
+export HISTTIMEFORMAT="%F %T "
+
+
+#
+# LESS
+#
+export LESS="-i -R" # Ignore case smartly, see more at less(1)
+
+# Less Colors for Man Pages
+export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
+export LESS_TERMCAP_me=$'\E[0m'           # end mode
+export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
+export LESS_TERMCAP_so=$'\E[1;30;1;43m'   # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\E[0m'           # end underline
+export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+
+
+#
+# PROMPT
+#
+PS1="\[\e[32m\]\u\[\e[m\]@\h \[\e[1;34m\]\w\[\e[m\] \[\e[0;33m\]\$ \[\e[m\]"
+
+
+#
+# SHELL
+#
+shopt -s cdspell        # automatically correct mistyped directory name when cd
+shopt -s checkwinsize 	# ensure that the terminals wrap lines correctly after resizing them
+shopt -s cmdhist        # save all lines of a multiple-line command in the same history entry
+shopt -s histappend     # append history list to the history file
+
+
+#
+# TITLE BAR
+#
+echo -en "\033]2;PWD\007"
+export PROMPT_COMMAND='history -a && echo -ne "\033]0;${PWD/$HOME/~}\007"'
+
+
+#
+# VIM
+#
+alias vi='vim'

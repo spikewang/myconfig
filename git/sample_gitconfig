@@ -1,0 +1,23 @@
+[alias]
+  br  = branch
+  ci  = commit
+  co  = checkout
+  df  = diff
+  lg  = log -p
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  st  = status
+
+[core]
+  editor = vim
+	quotepath = false
+
+[color]
+  branch = auto
+  diff   = auto
+  status = auto
+
+
+[color "status"]
+  added     = yellow
+  changed   = green
+  untracked = cyan

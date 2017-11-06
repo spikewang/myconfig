@@ -1,0 +1,674 @@
+;;
+;; Spike's .emacs
+;;
+;;
+
+;;    ___ _ __ ___   __ _  ___ ___
+;;   / _ \ '_ ` _ \ / _` |/ __/ __|
+;;  |  __/ | | | | | (_| | (__\__ \
+;; (_)___|_| |_| |_|\__,_|\___|___/
+;;
+
+;; This file is NOT part of GNU Emacs.
+
+;;
+;; Load path
+;;
+;; The second one is special for color-theme installed by macport on Mac. If
+;; it's not used or moved to the lisp directory. It can be removed.
+;;
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/elpa")
+(add-to-list 'load-path "~/.emacs.d/lisp/powerline.el")
+(add-to-list 'load-path "~/.emacs.d/lisp/gotags-el")
+
+;; Start the Emacs Daemon by default
+(server-start)
+
+;;(let ((default-directory "~/.emacs.d/lisp/"))
+;;  (normal-top-level-add-to-load-path '("."))
+;;  (normal-top-level-add-subdirs-to-load-path))
+
+(require 'cl)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+(package-initialize)
+
+;;
+;; PATH setup, there are two paths to be set-up here.
+;;
+(setenv "PATH" "/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin")
+;;(setenv "TERM" "xterm-256color")
+(setenv "TERM" "xterm")
+
+;; Exec-path is the path Emacs uses to find execuables for it self.
+(setq exec-path (append exec-path '("/usr/local/bin")))
+(setq exec-path (append exec-path '("/opt/local/bin")))
+
+
+;;
+;; Emacs global settings
+;;
+(fset 'yes-or-no-p 'y-or-n-p)                  ;; use "y or n" answers instead of "yes or no"
+(setq mac-command-modifier 'meta)              ;; set the command key to apple key
+(setq auto-save-default nil)                   ;; disable Emacs's auto-save
+(setq backup-by-copying t)                     ;; stop Emac's auto-backup changing file's date
+(setq default-fill-column 80)                  ;; set default column width
+(setq inhibit-startup-message t)               ;; disable the welcome screen
+(setq make-backup-files nil)                   ;; disable Emac's auto-backup
+(setq next-line-add-newlines nil)              ;; disable the ctrl-N to add new line
+(setq ns-pop-up-frames nil)                    ;; never open new frame for the new file
+(setq scroll-preserve-screen-position t)       ;; Scroll without moving cursor
+(setq-default indent-tabs-mode nil)            ;; Insert spaces instead of tabs
+(setq-default indicate-empty-lines t)          ;; show empty lines in the file
+(setq-default show-trailing-whitespace t)      ;; identify trailing whitespace at the end of the line
+(setq c-basic-offset 4)                        ;; set the default C indentation to 4 characters
+(setq-default tab-width 4)                     ;; set tab width to 4
+(setq confirm-nonexistent-file-or-buffer nil)
+(setq ns-use-srgb-colorspace t)                ;; Enable sRGB
+
+;;
+;; Font and font size
+;;
+(when (eq system-type 'darwin)
+  ;; Default Latin font (e.g. Consolas)
+  (set-face-attribute 'default nil :family "Inconsolata")
+  ;; default font size (point * 10)
+  ;;
+  ;; WARNING!  Depending on the default font,
+  ;; if the size is not supported very well, the frame will be clipped
+  ;; so that the beginning of the buffer may not be visible correctly.
+  (set-face-attribute 'default nil :height 140)
+
+  ;; use specific font for Korean charset.
+  ;; if you want to use different font size for specific charset,
+  ;; add :size POINT-SIZE in the font-spec.
+  ;;(set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
+
+  ;;
+  ;; Pick the different font based on which laptop I am on.
+  ;;
+  ;; when using external monitor with Macbook Pro Retina, we can set the font a
+  ;; bit smaller.
+  ;;
+  (when (string= system-name "spike-mbp-15.local")
+    (set-face-attribute 'default nil :height 160)
+    )
+  )
+
+
+;;
+;; Key bindings
+;;
+;; Using kbd (read-kdb-macro) here is just to make sure that this configruation
+;; file will be compatible with several versions of the Emacs and XEmacs.
+;;
+(global-set-key (kbd "\C-w")     'backward-kill-word)
+(global-set-key (kbd "\C-x\C-k") 'kill-region)
+(global-set-key (kbd "\C-c\C-k") 'kill-region)
+(global-set-key (kbd "C-c j")    'just-one-space) ;; Delete all spaces except one
+(global-set-key (kbd "M-o")      'other-window)
+(global-set-key (kbd "M-[")      'previous-buffer)
+(global-set-key (kbd "M-]")      'next-buffer)
+(global-set-key (kbd "\C-z")     'repeat)
+
+;;
+;; Ack Mode
+;;
+(autoload 'ack-and-a-half-same "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half-find-file-samee "ack-and-a-half" nil t)
+(autoload 'ack-and-a-half-find-file "ack-and-a-half" nil t)
+
+;; Create shorter aliases
+(defalias 'ack 'ack-and-a-half)
+(defalias 'ack-same 'ack-and-a-half-same)
+(defalias 'ack-find-file 'ack-and-a-half-find-file)
+(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+
+;;
+;; auto-fill-mode
+;;
+;; Enable for all major modes.
+;;
+;;(setq-default auto-fill-function 'do-auto-fill)
+;;(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'c-mode-common-hook (lambda () (auto-fill-mode 1)))
+
+;; Anything Mode
+;;
+;; Quicksilver for Emacs.
+;;
+
+;;(require 'anything)
+;;(require 'anything-config)
+
+;;(setq anytshing-sources
+;;      (list anything-c-source-buffers
+;;             anything-c-source-file-name-history
+;;             anything-c-source-locate
+;;             anything-c-source-info-pages
+;;             anything-c-source-man-pages
+;;             anything-c-source-file-cache
+;;             anything-c-source-emacs-commands))
+
+;; (global-set-key (kbd "M-X") 'anything)
+
+;;
+;; Bell
+;;
+;; Disable all bells, including both audio bell and visual bell all the time.
+;;
+(setq ring-bell-function 'ignore)
+(setq visible-bell t)
+
+;;
+;; blink-cursor-mode
+;;
+(blink-cursor-mode 0)
+
+
+;; Semantic
+;;(semantic-mode 1)
+
+;; (global-semantic-idle-completions-mode t)
+;; (global-semantic-decoration-mode t)
+;; (global-semantic-highlight-func-mode t)
+;; (global-semantic-show-unmatched-syntax-mode t)
+
+;;
+;; cmake-mode
+;;
+(autoload 'cmake-mode "cmake-mode" "Mode for edit cmake file" t)
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt$\\|\\.cmake\\'" . cmake-mode))
+
+;;
+;; color-theme
+;;
+;; The following two lines will only use this mode on GUI. Using zenburn mode as
+;; default. Theme should work really well in the terminal as well, so there is
+;; no point to use it only for window mode.
+;;
+;;(when window-system
+;;(load-theme 'zenburn t))
+;;
+(load-theme 'zenburn t)
+(set-face-attribute 'region nil :background "#797979")
+
+
+;;
+;; column-number-mode
+;;
+;; Indicate the exact column location on the modeline.
+;;
+(column-number-mode t)
+
+;;
+;; cua-selection-mode
+;;
+;; Only enable the CUA selection mode to have rectangle selection, global mark
+;; mode, etc, but with Emacs standard key bindings
+;;
+(cua-selection-mode t)
+
+;;
+;; Cursor color changing according to the mode
+;;
+;; (setq cursor-read-only-color "red")
+;; (setq cursor-read-only-color-type 'box)
+
+;; (setq cursor-overwrite-color "yellow")
+;; (setq cursor-overwrite-cursor-type 'box)
+
+;; (setq cursor-normal-color "gray")
+;; (setq cursor-normal-cursor-type 'box)
+
+;; (defun set-cursor-by-mode ()
+;;   "change cursor color and type according to some minor modes."
+
+;;   (cond
+;;     (buffer-read-only
+;;       (set-cursor-color cursor-read-only-color)
+;;       (setq cursor-type cursor-read-only-cursor-type))
+;;     (overwrite-mode
+;;       (set-cursor-color cursor-overwrite-color)
+;;       (setq cursor-type cursor-overwrite-cursor-type))
+;;     (t
+;;       (set-cursor-color cursor-normal-color)
+;;       (setq cursor-type cursor-normal-cursor-type))))
+
+;; (add-hook 'post-command-hook 'set-cursor-by-mode)
+
+;; Change cursor color according to mode
+(defvar hcz-set-cursor-color-color "")
+(defvar hcz-set-cursor-color-buffer "")
+(defun hcz-set-cursor-color-according-to-mode ()
+  "change cursor color according to some minor modes."
+  ;; set-cursor-color is somewhat costly, so we only call it when needed:
+  (let ((color
+		 (if buffer-read-only "white"
+		   (if overwrite-mode "red"
+			 "yellow"))))
+	(unless (and
+			 (string= color hcz-set-cursor-color-color)
+			 (string= (buffer-name) hcz-set-cursor-color-buffer))
+	  (set-cursor-color (setq hcz-set-cursor-color-color color))
+	  (setq hcz-set-cursor-color-buffer (buffer-name)))))
+(add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
+
+
+;;
+;; Display Time Mode
+;;
+(display-time-mode 1)
+
+;;
+;; gtags-mode
+;;
+;; gtags.el should come with the global package and under one of the default
+;; load paths. This section assumes that the gtags.el or gtags.elc can be
+;; found by default to be loaded correctly.
+;;
+;; Notice that, "require" didn't work in several cases, auto-load works, not
+;; entirely sure that why it happened, but try auto-load if require doesn't
+;; work
+;;
+(defun gtags-root-dir ()
+  "Check if emacs available here"
+  (= 0 (call-process "global" nil nil nil "-pr")))
+
+(defun gtags-update ()
+    "Make GTAGS incremental update"
+    (call-process "global" nil nil nil "-u"))
+
+(defun gtags-update-hook ()
+    (when (gtags-dir)
+      (gtags-update)))
+
+(add-hook 'gtags-mode-hook
+  (lambda ()
+    (local-set-key (kbd "M-.") 'gtags-find-tag)    ; find definiation
+    (local-set-key (kbd "M-,") 'gtags-find-rtag))) ; find all its occurrences
+
+(autoload 'gtags-mode "gtags" "GNU Global" t)
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (gtags-mode t)
+))
+
+(add-hook 'gtags-select-mode-hook
+  '(lambda ()
+  (setq hl-line-face 'underline)
+  (hl-line-mode 1)
+))
+
+(setq gtags-select-buffer-single t)
+(setq gtags-suggested-key-mapping t)
+(setq gtags-ignore-case nil)
+
+;;
+;; global-font-lock-mode
+;;
+;; Enable color syntax all the time
+;;
+(global-font-lock-mode 1)
+
+
+;;
+;; Golint
+;;
+(require 'golint)
+
+
+;;
+;; GOTAG
+;;
+(require 'me-alpheus-gotags)
+(add-hook 'go-mode-hook
+  (lambda ()
+    (local-set-key (kbd "M-.") 'me.alpheus/gotags/tag-search) ; find definiation
+    (local-set-key (kbd "M-,") 'gtags-find-rtag))) ; find all its occurrences
+
+
+;;
+;; google-c-style
+;;
+;; Enable Google C/C++ Style for c-mode
+;;
+;;(autoload 'google-set-c-style "google-c-style" "Google C/C++ Style" t)
+;;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+;;(add-hook 'c-mode-common-hook 'google-set-c-style)
+
+
+;;
+;; hide-show-mode
+;;
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+(add-hook 'lisp-mode-hook       'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
+
+(global-set-key (kbd "C-c s")  'hs-show-block)
+(global-set-key (kbd "C-c h")  'hs-hide-block)
+
+
+;;
+;; Highlight
+;;
+;; In every buffer, the line which contains the cursor will be fully
+;; highlighted
+;;(global-hl-line-mode t)
+
+;;
+;; ido-mode
+;;
+;;(ido-mode 1)
+
+;;(setq ido-enable-flex-matching t)
+;;(setq ido-everywhere t)
+;;(setq ido-use-url-at-point nil)   ;; don't use URL
+;;(setq ido-max-prospects 8)        ;; don't spam my minibuffer
+;;(setq ido-file-extensions-order '(".cpp" ".h" ".emacs" ".log"))
+
+;;(require 'ido-vertical-mode)
+;;(ido-vertical-mode 1)
+
+;;
+;; iswitchb-mode
+;;
+;;(iswitchb-mode 1)
+;;(setq iswitchb-buffer-ignore '("^ " "*Completions*" "*Shell Command Output*" "*Messages*" "Async Shell Command"))
+
+
+;;
+;; global-linum-mode
+;;
+;; The line number will be displayed on the left margin
+;;
+;;(global-linum-mode 1)
+;;(setq linum-format " %d ")
+
+;;
+;; makefile-mode
+;;
+;; Enable extensive whitespace indication in makefile mode, since tab or space
+;; are very tricky in makefile
+;;
+(add-hook 'makefile-mode-hook (lambda() (whitespace-mode t)))
+(add-to-list 'auto-mode-alist '("\\.mk$\\|\\.binos\\'" . makefile-mode))
+
+
+;;
+;; menu-bar-mode
+;;
+;; Disable menubar mode all the time. On GUI mode, there is no such mode
+;; available
+;;
+(unless window-system (menu-bar-mode -1))
+
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;;
+;; paren-mode
+;;
+;; Show brackets match in source file
+;;
+(show-paren-mode t)
+(setq show-paren-style 'mixed)
+
+
+;;
+;;powerline
+;;
+;; A mode to simulate the powerline feature in Vim.
+;;
+(require 'powerline)
+(powerline-default-theme)
+(setq powerline-arrow-shape 'arrow)   ;; the default
+
+;;
+;; Saveplace
+;;
+;; Save the last visited position in the file and redirect the file to be used
+;; to our .emacs.d directory
+;;
+(setq-default save-place t)
+(setq save-place-file "~/.emacs.d/saveplace")
+(require 'saveplace)
+
+;;
+;; scroll-bar-mode
+;;
+;; This mode is only available on GUI mode. It's pretty annoying to see it.
+;; Especially, it's not very useful, disable it by default.
+;;
+(when window-system (scroll-bar-mode -1))
+
+;;
+;; size-indication-mode
+;;
+;; Show the size of the file on modeline and indicate the percentage where we
+;; are
+;;
+(size-indication-mode t)
+
+;;
+;; Switch between header and implementation file
+;;
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (local-set-key (kbd "C-c o") 'ff-find-other-file)))
+
+
+;;
+;; Tab Settings
+;;
+
+;;
+;; tool-bar-mode
+;;
+;; Always disable toolbar. It's only available in the GUI mode
+;;
+(if window-system (tool-bar-mode -1))
+
+
+;; transient-mark-mode
+;;
+;; highlight region when mark is set.
+;;
+(transient-mark-mode t)
+
+;;
+;; uniquify
+;;
+;; make buffer name unique.
+;;
+(require 'uniquify)
+
+;;
+;; which-function-mode
+;;
+(which-function-mode t)
+
+;;
+;; Whitespace & Empty line
+;;
+;; and the end of
+;; file
+;;
+
+;;
+;; vc-cvs
+;;
+(setq vc-handled-backends nil)
+
+
+;;
+;; Window Settings
+;;
+;; Set default window size and position
+;;
+(when window-system
+;;    (set-frame-height   (selected-frame) 60)
+;;    (set-frame-width    (selected-frame) 200)
+    (set-frame-position (selected-frame) 0 0)
+)
+
+
+;;
+;; pc-selection-mode
+;;
+;;(if (fboundp 'pc-selection-mode)
+;;    (pc-selection-mode)
+;;    (require 'pc-select) )
+
+
+;; Global Key Binding
+(global-set-key "\M-g" 'goto-line)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
+;; -----------------------------------------------------------------------------
+
+;;
+;; ASCII Table
+;;
+;; show ascii table
+;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
+;;
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)
+  (switch-to-buffer "*ASCII*")
+  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+;;
+;; Kills all them buffers except scratch
+;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
+;;
+(defun nuke-all-buffers ()
+  "kill all buffers, leaving *scratch* only"
+  (interactive)
+  (mapcar (lambda (x) (kill-buffer x))
+	  (buffer-list))
+  (delete-other-windows))
+
+
+;;
+;; Save the buffer no matter what.
+;;
+;; This is very helpful when the file has been changed on the disk but buffer is
+;; not changed at all. So this command will save the copy of the buffer one more
+;; time to overwrite the file on the disk.
+;;
+(defun save-buffer-always ()
+  "Save the buffer even if Emacs decides it's not modified"
+  (interactive)
+  (set-buffer-modified-p t)
+  (save-buffer))
+
+
+
+(defun ido-goto-symbol (&optional symbol-list)
+      "Refresh imenu and jump to a place in the buffer using Ido."
+      (interactive)
+      (unless (featurep 'imenu)
+        (require 'imenu nil t))
+      (cond
+       ((not symbol-list)
+        (let ((ido-mode ido-mode)
+              (ido-enable-flex-matching
+               (if (boundp 'ido-enable-flex-matching)
+                   ido-enable-flex-matching t))
+              name-and-pos symbol-names position)
+          (unless ido-mode
+            (ido-mode 1)
+            (setq ido-enable-flex-matching t))
+          (while (progn
+                   (imenu--cleanup)
+                   (setq imenu--index-alist nil)
+                   (ido-goto-symbol (imenu--make-index-alist))
+                   (setq selected-symbol
+                         (ido-completing-read "Symbol? " symbol-names))
+                   (string= (car imenu--rescan-item) selected-symbol)))
+          (unless (and (boundp 'mark-active) mark-active)
+            (push-mark nil t nil))
+          (setq position (cdr (assoc selected-symbol name-and-pos)))
+          (cond
+           ((overlayp position)
+            (goto-char (overlay-start position)))
+           (t
+            (goto-char position)))))
+       ((listp symbol-list)
+        (dolist (symbol symbol-list)
+          (let (name position)
+            (cond
+             ((and (listp symbol) (imenu--subalist-p symbol))
+              (ido-goto-symbol symbol))
+             ((listp symbol)
+              (setq name (car symbol))
+              (setq position (cdr symbol)))
+             ((stringp symbol)
+              (setq name symbol)
+              (setq position
+                    (get-text-property 1 'org-imenu-marker symbol))))
+            (unless (or (null position) (null name)
+                        (string= (car imenu--rescan-item) name))
+              (add-to-list 'symbol-names name)
+              (add-to-list 'name-and-pos (cons name position))))))))
+
+
+  (defun find-definition (arg)
+    "Jump to the definition of the symbol, type or function at point.
+  With prefix arg, find in other window."
+    (interactive "P")
+    (let* ((tag (or (semantic-idle-summary-current-symbol-info-context)
+                    (semantic-idle-summary-current-symbol-info-brutish)
+                    (error "No known tag at point")))
+           (pos (or (semantic-tag-start tag)
+                    (error "Tag definition not found")))
+           (file (semantic-tag-file-name tag)))
+      (if file
+          (if arg (find-file-other-window file) (find-file file))
+        (if arg (switch-to-buffer-other-window (current-buffer))))
+      (push-mark)
+      (goto-char pos)
+      (end-of-line)))
+
+    (global-set-key "\C-ci" 'find-definition) ; or any key you see fit
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(cua-mode t nil (cua-base))
+ '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
+ '(package-selected-packages
+   (quote
+    (markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+ '(show-paren-mode t)
+ '(size-indication-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

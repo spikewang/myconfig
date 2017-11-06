@@ -1,0 +1,191 @@
+#
+# My .zshrc
+#
+#
+
+#
+# WHICH OS?
+#
+# First thing first, determine what the current OS is. No matter what "uname" we
+# are using. "-s" looks like an common option. Based on the OS, lots of things
+# are different.
+#
+kernel=`uname -s`
+
+#
+# PATH & MANPATH
+#
+export PATH="/sbin:/usr/sbin:/usr/local/sbin:$PATH"
+
+if [ $kernel = "Darwin" ]; then
+
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+fi
+
+#
+# OH-MY-ZSH
+#
+# Path to your oh-my-zsh installation.
+#
+if [ $kernel = "Darwin" ]; then
+    export ZSH=/Users/spwang/.oh-my-zsh
+fi
+
+#
+# THEME
+#
+# Set name of the theme to load. Optionally, if you set this to "random"
+# it'll load a random theme each time that oh-my-zsh is loaded.
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+#
+ZSH_THEME="bira"
+
+
+# Uncomment the following line to use case-sensitive completion.
+CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(web-search tmux urltools)
+
+source $ZSH/oh-my-zsh.sh
+
+
+#
+# CD
+#
+alias .='cd ../'
+alias ..='cd ../../'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+
+#
+# LANG
+#
+export LANG=en_US.UTF-8
+
+#
+# LS
+#
+alias ls='ls --color=auto'
+alias l='ls -alF'
+alias la='ls -la'
+alias ll='ls -l'
+alias dir='ls -l'
+
+#
+# EMACS
+#
+alias em='/Applications/Emacs.app/Contents/MacOS/emacs -nw'
+alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nq "$@"'
+
+
+#
+# GIT
+#
+git config --global alias.lg   "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+git config --global alias.st   "status"
+git config --global alias.pl   "pull"
+git config --global alias.p    "push"
+git config --global alias.c    "commit -v"
+git config --global alias.ca   "commit -v -a"
+git config --global alias.b    "branch"
+git config --global alias.co   "checkout"
+git config --global alias.cob  "checkout -b"
+git config --global alias.log  "log"
+git config --global alias.d    "diff --color --ignore-space-at-eol -b -w --ignore-blank-lines"
+git config --global alias.dw   "diff -w --word-diff=color --word-diff-regex=."
+git config --global alias.stap "stash && git stash apply"
+git config --global alias.sc   "diff --name-only --diff-filter=U"
+
+
+#
+# GO
+#
+export GOPATH=$HOME/Workspace/go
+export GOBIN=$GOPATH/bin
+
+export PATH="$PATH:$GOBIN"
+
+#
+# GREP
+#
+# Both Mac's BSD version and GNU version support GREP_COLORS.
+#
+export GREP_COLORS="mc=00;36:ms=31:mt=01;33:ln=31"
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+
+#
+# HISTORY
+#
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_NO_STORE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_SAVE_NO_DUPS
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+
+
+#
+# LESS
+#
+export LESS="-i -R" # Ignore case smartly, see more at less(1)
+
+# Less Colors for Man Pages
+export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
+export LESS_TERMCAP_me=$'\E[0m'           # end mode
+export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
+export LESS_TERMCAP_so=$'\E[1;30;1;43m'   # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\E[0m'           # end underline
+export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+
+
+
+#
+# TMUX
+#
+export ZSH_TMUX_AUTOSTART=true

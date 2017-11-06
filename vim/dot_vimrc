@@ -1,0 +1,96 @@
+" Show line numbers:
+set number
+set ruler
+
+" Dispaly the current mode and partially-typed commands in the status bar:
+set showmode
+set showcmd
+
+" Use indents of 4 spaces, and have them copied down lines:
+set tabstop=4
+
+set softtabstop=4
+
+" THe number of space characters inserted for indentation
+"set shiftwidth=4
+	
+set shiftround
+
+" Insert Space characters whenever the tab key is pressed.
+set expandtab 
+
+set autoindent
+
+" Always show the status line
+set laststatus=2
+
+" 
+set scrolloff=2
+
+" Show matching brackets/braces/parantheses:
+set showmatch
+
+" Make searches case-insensitive, unless they contain upper-case letters:
+set ignorecase
+set smartcase
+
+" Show the "best match so far" as search strings are typed:
+set hlsearch
+
+" Assume the /g on :s substitutions to replace all matches in a line:
+set gdefault
+
+" Have the mouse enabled all the time:
+"set mouse=a
+
+set nocompatible
+
+" Have command-line completion <Tab> (for filenames, help topics, option names)
+" first list the available options and complete the longest common part, then
+" have further <Tab>s cycle through the possibilities:
+set wildmode=longest,list
+
+" Use "[RO]" for "[readonly]" to save space in the message line:
+set shortmess+=r
+
+" Don't have files trying to override this .vimrc:
+set nomodeline
+
+" Enable filetype detection:
+filetype on
+
+" Enable syntax highlighting in terminals which can display colors:
+if has('syntax') && (&t_Co > 2)
+   syntax on
+endif
+
+" Automatically save before commands like :next and :make
+set autowrite
+
+
+" For c-like programming, have automatic indentation:
+autocmd FileType c,cpp,slang set cindent
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+autocmd FileType c set omnifunc=ccomplete#Complete
+
+
+" KEY MAPPING
+"---------------------------------------------------------------------------------
+nnoremap <silent> <F7> :TlistToggle<CR>
+let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+
+"TAGLIST SETTINGS
+"----------------------------------------------------------------------------------
+let Tlist_Exit_OnlyWindow = 1 " Exit if only the taglist window is currently opened
+let Tlist_AutoOpen = 0 " Launch taglist automatically at startup or no
+
+if has("gui_running")
+    colorscheme koehler
+    set columns=90 lines=65
+    set transparency=8
+endif
+
+hi LineNr   guifg=Blue
+set guioptions=egmrLt
+set enc=utf-8
+

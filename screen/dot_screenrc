@@ -1,0 +1,102 @@
+# META Key
+#
+# Instead of the default Ctrl-a, using the Ctrl-b as the META key, since Ctrl-a
+# is conflict with Emacs key binding. (default: ^Aa)
+escape ^^^^
+
+term screen-256color
+
+#
+# Do not trash BackSpace, usually DEL
+#
+bindkey -k kb
+bindkey -d -k kb
+
+# Do not trash Delete, usually ESC [ 3 ~
+bindkey -k kD
+bindkey -d -k kD
+
+
+# Autodetach session on hangup instead of terminating screen completely 
+# (default: on) 
+autodetach on 
+
+
+# Enable the alternative screen to preserve the current status of the command line
+altscreen on
+
+# Select line break behavior for copying (default: off)
+crlf off 
+
+
+# Set default lines of scrollback (default: 100)
+defscrollback 3000        
+
+
+
+# Status bar to display the screen information
+#
+# hardstatus on
+# hardstatus alwayslastline
+# hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+#caption always 
+#caption string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+
+
+
+#
+# Toggle 'fullscreen' or not.
+#
+# For example, the following command will bin
+#
+# bind f eval "caption splitonly" "hardstatus ignore"
+# bind F eval "caption always"    "hardstatus alwayslastline"
+#
+bind f eval "caption splitonly"
+bind F eval "caption always"
+
+
+
+#defhstatus "screen ^E (^Et) | $USER@^EH"
+
+# Set message displayed on pow_detach (when HUP is sent to screen's parent
+# process).
+pow_detach_msg "BYE"
+
+# Set the default program for new windows.
+shell bash
+
+# Change text highlighting. See http://bit.ly/11RDGZ
+sorendition gK
+
+# Do NOT display copyright notice on startup and turn off the splash screen 
+# (default: on)
+startup_message off         
+
+# Disable visible bell
+vbell off
+
+# Set environment variable $TERM for new windows. Display problem and ^H 
+# problems with the default value. Comment out to use the default (default 
+# 'screen') 
+term xterm
+
+# Allow xterm / Terminal scrollbars to access the scrollback buffer. This
+# enables the behavior you'd expect, instead of losing the content that scrolls
+# out of the window.
+termcapinfo linux ti@:te@
+termcapinfo xterm* ti@:te@
+
+# Tweak termcap, terminfo, and termcapinfo  entries for best performance.
+termcap linux  'AF=\E[3%dm:AB=\E[4%dm'
+termcap xterm* 'AF=\E[3%dm:AB=\E[4%dm'
+
+terminfo linux  'AF=\E[3%p1%dm:AB=\E[4%p1%dm'
+terminfo xterm* 'AF=\E[3%p1%dm:AB=\E[4%p1%dm'
+
+
+#change the hardstatus settings to give an window list at the bottom of the                                                                        
+#screen, with the time and date and with the current window highlighted                                                                            
+hardstatus alwayslastline
+#hardstatus string '%{= kG}%-Lw%{= kW}%50> %n%f* %t%{= kG}%+Lw%< %{= kG}%-=%c:%s%{-}'
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W}%c %{g}]'

@@ -23,7 +23,7 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/gotags-el")
 
 ;; Start the Emacs Daemon by default
-(server-start)
+;;(server-start)
 
 ;;(let ((default-directory "~/.emacs.d/lisp/"))
 ;;  (normal-top-level-add-to-load-path '("."))
@@ -31,9 +31,10 @@
 
 (require 'cl)
 (require 'package)
+;;(add-to-list 'package-archives
+;;             '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;;
@@ -105,17 +106,20 @@
 ;; Using kbd (read-kdb-macro) here is just to make sure that this configruation
 ;; file will be compatible with several versions of the Emacs and XEmacs.
 ;;
-(global-set-key (kbd "\C-w")     'backward-kill-word)
-(global-set-key (kbd "\C-x\C-k") 'kill-region)
-(global-set-key (kbd "\C-c\C-k") 'kill-region)
 (global-set-key (kbd "C-c j")    'just-one-space) ;; Delete all spaces except one
-(global-set-key (kbd "M-o")      'other-window)
+(global-set-key (kbd "C-x C-b")  'ibuffer)
 (global-set-key (kbd "M-[")      'previous-buffer)
 (global-set-key (kbd "M-]")      'next-buffer)
+(global-set-key (kbd "M-o")      'other-window)
+(global-set-key (kbd "\C-c\C-k") 'kill-region)
+(global-set-key (kbd "\C-w")     'backward-kill-word)
+(global-set-key (kbd "\C-x\C-k") 'kill-region)
 (global-set-key (kbd "\C-z")     'repeat)
+(global-set-key (kbd "\M-g")     'goto-line)
+
 
 ;;
-;; Ack Mode
+;; ack-and-a-half
 ;;
 (autoload 'ack-and-a-half-same "ack-and-a-half" nil t)
 (autoload 'ack-and-a-half "ack-and-a-half" nil t)
@@ -127,6 +131,7 @@
 (defalias 'ack-same 'ack-and-a-half-same)
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+
 
 ;;
 ;; auto-fill-mode
@@ -309,12 +314,21 @@
 (setq gtags-suggested-key-mapping t)
 (setq gtags-ignore-case nil)
 
+
 ;;
 ;; global-font-lock-mode
 ;;
 ;; Enable color syntax all the time
 ;;
 (global-font-lock-mode 1)
+
+
+;;
+;; git-commit-mode
+;;
+;; This should enable the color output when using emacs to edit commit message.
+;;
+(global-git-commit-mode t)
 
 
 ;;
@@ -411,11 +425,11 @@
 ;;
 (unless window-system (menu-bar-mode -1))
 
-
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
 
 ;;
 ;; paren-mode
@@ -435,6 +449,7 @@
 (powerline-default-theme)
 (setq powerline-arrow-shape 'arrow)   ;; the default
 
+
 ;;
 ;; Saveplace
 ;;
@@ -445,6 +460,7 @@
 (setq save-place-file "~/.emacs.d/saveplace")
 (require 'saveplace)
 
+
 ;;
 ;; scroll-bar-mode
 ;;
@@ -452,6 +468,7 @@
 ;; Especially, it's not very useful, disable it by default.
 ;;
 (when window-system (scroll-bar-mode -1))
+
 
 ;;
 ;; size-indication-mode
@@ -461,6 +478,7 @@
 ;;
 (size-indication-mode t)
 
+
 ;;
 ;; Switch between header and implementation file
 ;;
@@ -468,10 +486,6 @@
   (lambda()
     (local-set-key (kbd "C-c o") 'ff-find-other-file)))
 
-
-;;
-;; Tab Settings
-;;
 
 ;;
 ;; tool-bar-mode
@@ -487,6 +501,7 @@
 ;;
 (transient-mark-mode t)
 
+
 ;;
 ;; uniquify
 ;;
@@ -494,10 +509,12 @@
 ;;
 (require 'uniquify)
 
+
 ;;
 ;; which-function-mode
 ;;
 (which-function-mode t)
+
 
 ;;
 ;; Whitespace & Empty line
@@ -505,6 +522,7 @@
 ;; and the end of
 ;; file
 ;;
+
 
 ;;
 ;; vc-cvs
@@ -531,13 +549,6 @@
 ;;    (pc-selection-mode)
 ;;    (require 'pc-select) )
 
-
-;; Global Key Binding
-(global-set-key "\M-g" 'goto-line)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
-
-;; -----------------------------------------------------------------------------
 
 ;;
 ;; ASCII Table
@@ -662,7 +673,7 @@
  '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
  '(package-selected-packages
    (quote
-    (markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+    (magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(tool-bar-mode nil))

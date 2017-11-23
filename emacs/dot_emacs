@@ -19,8 +19,6 @@
 ;;
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/elpa")
-(add-to-list 'load-path "~/.emacs.d/lisp/powerline.el")
-(add-to-list 'load-path "~/.emacs.d/lisp/gotags-el")
 
 ;; Start the Emacs Daemon by default
 ;;(server-start)
@@ -33,8 +31,18 @@
 (require 'package)
 ;;(add-to-list 'package-archives
 ;;             '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives
+;;             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+  (add-to-list 'package-archives (cons "melpa" url) t))
+
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+
 (package-initialize)
 
 ;;
@@ -83,11 +91,6 @@
   ;; so that the beginning of the buffer may not be visible correctly.
   (set-face-attribute 'default nil :height 140)
 
-  ;; use specific font for Korean charset.
-  ;; if you want to use different font size for specific charset,
-  ;; add :size POINT-SIZE in the font-spec.
-  ;;(set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
-
   ;;
   ;; Pick the different font based on which laptop I am on.
   ;;
@@ -98,6 +101,21 @@
     (set-face-attribute 'default nil :height 160)
     )
   )
+
+
+;;
+;; Window Settings
+;;
+;; Set default window size and position
+;;
+(when window-system
+    (when (string= system-name "spike-mbp-15.local")
+      (set-frame-height   (selected-frame) 55)
+      (set-frame-width    (selected-frame) 100)
+      (set-frame-position (selected-frame) 120 0)
+      )
+
+)
 
 
 ;;
@@ -119,47 +137,14 @@
 
 
 ;;
-;; ack-and-a-half
-;;
-(autoload 'ack-and-a-half-same "ack-and-a-half" nil t)
-(autoload 'ack-and-a-half "ack-and-a-half" nil t)
-(autoload 'ack-and-a-half-find-file-samee "ack-and-a-half" nil t)
-(autoload 'ack-and-a-half-find-file "ack-and-a-half" nil t)
-
-;; Create shorter aliases
-(defalias 'ack 'ack-and-a-half)
-(defalias 'ack-same 'ack-and-a-half-same)
-(defalias 'ack-find-file 'ack-and-a-half-find-file)
-(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-
-
-;;
 ;; auto-fill-mode
 ;;
-;; Enable for all major modes.
+;; Enable for all major modes:
+;;   (setq-default auto-fill-function 'do-auto-fill)
+;;   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 ;;
-;;(setq-default auto-fill-function 'do-auto-fill)
-;;(add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'c-mode-common-hook (lambda () (auto-fill-mode 1)))
 
-;; Anything Mode
-;;
-;; Quicksilver for Emacs.
-;;
-
-;;(require 'anything)
-;;(require 'anything-config)
-
-;;(setq anytshing-sources
-;;      (list anything-c-source-buffers
-;;             anything-c-source-file-name-history
-;;             anything-c-source-locate
-;;             anything-c-source-info-pages
-;;             anything-c-source-man-pages
-;;             anything-c-source-file-cache
-;;             anything-c-source-emacs-commands))
-
-;; (global-set-key (kbd "M-X") 'anything)
 
 ;;
 ;; Bell
@@ -169,25 +154,20 @@
 (setq ring-bell-function 'ignore)
 (setq visible-bell t)
 
+
 ;;
 ;; blink-cursor-mode
+;;
+;; Never ever blink my cursor at all. It's simply annoying.
 ;;
 (blink-cursor-mode 0)
 
 
-;; Semantic
-;;(semantic-mode 1)
-
-;; (global-semantic-idle-completions-mode t)
-;; (global-semantic-decoration-mode t)
-;; (global-semantic-highlight-func-mode t)
-;; (global-semantic-show-unmatched-syntax-mode t)
-
 ;;
 ;; cmake-mode
 ;;
-(autoload 'cmake-mode "cmake-mode" "Mode for edit cmake file" t)
-(add-to-list 'auto-mode-alist '("CMakeLists\\.txt$\\|\\.cmake\\'" . cmake-mode))
+;; (autoload 'cmake-mode "cmake-mode" "Mode for edit cmake file" t)
+;; (add-to-list 'auto-mode-alist '("CMakeLists\\.txt$\\|\\.cmake\\'" . cmake-mode))
 
 ;;
 ;; color-theme
@@ -199,8 +179,8 @@
 ;;(when window-system
 ;;(load-theme 'zenburn t))
 ;;
-(load-theme 'zenburn t)
-(set-face-attribute 'region nil :background "#797979")
+(load-theme 'tangotango t)
+;;(set-face-attribute 'region nil :background "#797979")
 
 
 ;;
@@ -210,6 +190,7 @@
 ;;
 (column-number-mode t)
 
+
 ;;
 ;; cua-selection-mode
 ;;
@@ -218,56 +199,14 @@
 ;;
 (cua-selection-mode t)
 
-;;
-;; Cursor color changing according to the mode
-;;
-;; (setq cursor-read-only-color "red")
-;; (setq cursor-read-only-color-type 'box)
-
-;; (setq cursor-overwrite-color "yellow")
-;; (setq cursor-overwrite-cursor-type 'box)
-
-;; (setq cursor-normal-color "gray")
-;; (setq cursor-normal-cursor-type 'box)
-
-;; (defun set-cursor-by-mode ()
-;;   "change cursor color and type according to some minor modes."
-
-;;   (cond
-;;     (buffer-read-only
-;;       (set-cursor-color cursor-read-only-color)
-;;       (setq cursor-type cursor-read-only-cursor-type))
-;;     (overwrite-mode
-;;       (set-cursor-color cursor-overwrite-color)
-;;       (setq cursor-type cursor-overwrite-cursor-type))
-;;     (t
-;;       (set-cursor-color cursor-normal-color)
-;;       (setq cursor-type cursor-normal-cursor-type))))
-
-;; (add-hook 'post-command-hook 'set-cursor-by-mode)
-
-;; Change cursor color according to mode
-(defvar hcz-set-cursor-color-color "")
-(defvar hcz-set-cursor-color-buffer "")
-(defun hcz-set-cursor-color-according-to-mode ()
-  "change cursor color according to some minor modes."
-  ;; set-cursor-color is somewhat costly, so we only call it when needed:
-  (let ((color
-		 (if buffer-read-only "white"
-		   (if overwrite-mode "red"
-			 "yellow"))))
-	(unless (and
-			 (string= color hcz-set-cursor-color-color)
-			 (string= (buffer-name) hcz-set-cursor-color-buffer))
-	  (set-cursor-color (setq hcz-set-cursor-color-color color))
-	  (setq hcz-set-cursor-color-buffer (buffer-name)))))
-(add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
-
 
 ;;
 ;; Display Time Mode
 ;;
+;; Show the current time in the modeline. Very useful in full screen mode.
+;;
 (display-time-mode 1)
+
 
 ;;
 ;; gtags-mode
@@ -338,7 +277,7 @@
 
 
 ;;
-;; GOTAG
+;; GOTAGS
 ;;
 (require 'me-alpheus-gotags)
 (add-hook 'go-mode-hook
@@ -360,6 +299,8 @@
 ;;
 ;; hide-show-mode
 ;;
+;; Enable it for most programming languages
+;;
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
 (add-hook 'java-mode-hook       'hs-minor-mode)
@@ -376,6 +317,7 @@
 ;;
 ;; In every buffer, the line which contains the cursor will be fully
 ;; highlighted
+;;
 ;;(global-hl-line-mode t)
 
 ;;
@@ -425,6 +367,10 @@
 ;;
 (unless window-system (menu-bar-mode -1))
 
+
+;;
+;; multi-cursors-mode
+;;
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
@@ -495,6 +441,7 @@
 (if window-system (tool-bar-mode -1))
 
 
+;;
 ;; transient-mark-mode
 ;;
 ;; highlight region when mark is set.
@@ -530,25 +477,6 @@
 (setq vc-handled-backends nil)
 
 
-;;
-;; Window Settings
-;;
-;; Set default window size and position
-;;
-(when window-system
-;;    (set-frame-height   (selected-frame) 60)
-;;    (set-frame-width    (selected-frame) 200)
-    (set-frame-position (selected-frame) 0 0)
-)
-
-
-;;
-;; pc-selection-mode
-;;
-;;(if (fboundp 'pc-selection-mode)
-;;    (pc-selection-mode)
-;;    (require 'pc-select) )
-
 
 ;;
 ;; ASCII Table
@@ -567,6 +495,7 @@
       (setq i (+ i 1))
       (insert (format "%4d %c\n" i i))))
   (beginning-of-buffer))
+
 
 ;;
 ;; Kills all them buffers except scratch
@@ -662,6 +591,7 @@
       (end-of-line)))
 
     (global-set-key "\C-ci" 'find-definition) ; or any key you see fit
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -670,10 +600,13 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(cua-mode t nil (cua-base))
+ '(custom-safe-themes
+   (quote
+    ("4e63466756c7dbd78b49ce86f5f0954b92bf70b30c01c494b37c586639fa3f6f" default)))
  '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
  '(package-selected-packages
    (quote
-    (magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+    (tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(tool-bar-mode nil))
@@ -683,3 +616,48 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+;;==============================================================================
+;;
+;; ack-and-a-half
+;;
+;; (autoload 'ack-and-a-half-same "ack-and-a-half" nil t)
+;; (autoload 'ack-and-a-half "ack-and-a-half" nil t)
+;; (autoload 'ack-and-a-half-find-file-samee "ack-and-a-half" nil t)
+;; (autoload 'ack-and-a-half-find-file "ack-and-a-half" nil t)
+
+;; ;; Create shorter aliases
+;; (defalias 'ack 'ack-and-a-half)
+;; (defalias 'ack-same 'ack-and-a-half-same)
+;; (defalias 'ack-find-file 'ack-and-a-half-find-file)
+;; (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+
+;; Anything Mode
+;;
+;; Quicksilver for Emacs.
+;;
+
+;;(require 'anything)
+;;(require 'anything-config)
+
+;;(setq anytshing-sources
+;;      (list anything-c-source-buffers
+;;             anything-c-source-file-name-history
+;;             anything-c-source-locate
+;;             anything-c-source-info-pages
+;;             anything-c-source-man-pages
+;;             anything-c-source-file-cache
+;;             anything-c-source-emacs-commands))
+
+;; (global-set-key (kbd "M-X") 'anything)
+
+;;
+;; Semantic
+;;
+;; (semantic-mode 1)
+;;
+;; (global-semantic-idle-completions-mode t)
+;; (global-semantic-decoration-mode t)
+;; (global-semantic-highlight-func-mode t)
+;; (global-semantic-show-unmatched-syntax-mode t)

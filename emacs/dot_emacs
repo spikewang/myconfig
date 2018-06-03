@@ -61,7 +61,7 @@
 ;; Emacs global settings
 ;;
 (fset 'yes-or-no-p 'y-or-n-p)                  ;; use "y or n" answers instead of "yes or no"
-(setq mac-command-modifier 'meta)              ;; set the command key to apple key
+(if window-system(setq mac-command-modifier 'meta))              ;; set the command key to apple key
 (setq auto-save-default nil)                   ;; disable Emacs's auto-save
 (setq backup-by-copying t)                     ;; stop Emac's auto-backup changing file's date
 (setq default-fill-column 80)                  ;; set default column width
@@ -127,8 +127,8 @@
 ;;
 (global-set-key (kbd "C-c j")    'just-one-space) ;; Delete all spaces except one
 (global-set-key (kbd "C-x C-b")  'ibuffer)
-(global-set-key (kbd "M-[")      'previous-buffer)
-(global-set-key (kbd "M-]")      'next-buffer)
+(global-set-key (kbd "C-x [")      'previous-buffer)
+(global-set-key (kbd "C-x ]")      'next-buffer)
 (global-set-key (kbd "M-o")      'other-window)
 (global-set-key (kbd "\C-c\C-k") 'kill-region)
 (global-set-key (kbd "\C-w")     'backward-kill-word)

@@ -83,7 +83,6 @@
 ;;
 (when (eq system-type 'darwin)
   ;; Default Latin font (e.g. Consolas)
-;;  (set-face-attribute 'default nil :family "Inconsolata")
   (set-face-attribute 'default nil :family "SF Mono")
   ;; default font size (point * 10)
   ;;
@@ -91,18 +90,19 @@
   ;; if the size is not supported very well, the frame will be clipped
   ;; so that the beginning of the buffer may not be visible correctly.
   (set-face-attribute 'default nil :height 120)
-
-  ;;
-  ;; Pick the different font based on which laptop I am on.
-  ;;
-  ;; when using external monitor with Macbook Pro Retina, we can set the font a
-  ;; bit smaller.
-  ;;
-  (when (string= system-name "spike-mbp-15.local")
-    (set-face-attribute 'default nil :height 120)
-    )
   )
 
+(when (eq system-type 'gnu/linux)
+  ;; Default Latin font (e.g. Consolas)
+  ;;  (set-face-attribute 'default nil :family "Inconsolata")
+  (set-face-attribute 'default nil :family "Monospace")
+  ;; default font size (point * 10)
+  ;;
+  ;; WARNING!  Depending on the default font,
+  ;; if the size is not supported very well, the frame will be clipped
+  ;; so that the beginning of the buffer may not be visible correctly.
+  (set-face-attribute 'default nil :height 120)
+)
 
 ;;
 ;; Window Settings
@@ -607,7 +607,7 @@
  '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
  '(package-selected-packages
    (quote
-    (tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+    (go tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(tool-bar-mode nil))

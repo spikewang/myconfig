@@ -1,0 +1,22 @@
+# .bash_aliases
+
+if [ $system == "Darwin" ]; then
+    ls_cmd=`which ls`
+
+    if [ $ls_cmd == "/bin/ls" ]; then
+        export CLICOLOR=1
+    fi
+fi
+
+alias ls='ls --color=auto'
+alias dir='ls -l'
+alias l='ls -alF'
+alias la='ls -la'
+alias ll='ls -l'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+alias em='emacs -nw'
+alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nq "$@"'

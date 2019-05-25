@@ -126,11 +126,12 @@ shopt -s histappend     # append history list to the history file
 #
 # TITLE BAR
 #
-echo -en "\033]2;PWD\007"
-export PROMPT_COMMAND='history -a && echo -ne "\033]0;${PWD/$HOME/~}\007"'
+#echo -en "\033]2;PWD\007"
+#export PROMPT_COMMAND='history -a && echo -ne "\033]0;${PWD/$HOME/~}\007"'
 
 
 #
 # VIM
 #
 alias vi='vim'
+. .bash_aliases

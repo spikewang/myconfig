@@ -29,20 +29,8 @@
 
 (require 'cl)
 (require 'package)
-;;(add-to-list 'package-archives
-;;             '("melpa" . "https://melpa.org/packages/") t)
-;;(add-to-list 'package-archives
-;;             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
-  (add-to-list 'package-archives (cons "melpa" url) t))
-
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;;
@@ -607,7 +595,7 @@
  '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
  '(package-selected-packages
    (quote
-    (go tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+    (yaml-mode ## go tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(tool-bar-mode nil))

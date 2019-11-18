@@ -19,6 +19,15 @@ esac
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:/sbin:/usr/sbin:/usr/local/sbin:/opt/local/bin:$PATH
 
 #
+# Enable bash_completion
+#
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion || {
+    # if not found in /usr/local/etc, try the brew --prefix location
+    [ -f "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ] && \
+        . $(brew --prefix)/etc/bash_completion.d/git-completion.bash
+}
+
+#
 # Aliases
 #
 if [ $system == "Darwin" ]; then
@@ -135,3 +144,21 @@ shopt -s histappend     # append history list to the history file
 #
 alias vi='vim'
 . .bash_aliases
+
+
+        set_kubeconfig() {
+            KUBECONFIG=$HOME/.kube/config
+            for file in $HOME/.kube/config.d/*
+            do
+                KUBECONFIG=$KUBECONFIG:$file
+            done
+            export KUBECONFIG=$KUBECONFIG
+            which kubeon > /dev/null && kubeon
+        }
+
+        unset_kubeconfig() {
+            unset KUBECONFIG
+            which kubeoff > /dev/null && kubeoff
+        }
+
+        set_kubeconfig

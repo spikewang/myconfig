@@ -120,8 +120,8 @@ alias dir='ls -l'
 # EMACS
 #
 if [ $kernel = "Darwin" ]; then
-    alias em='/Applications/Emacs.app/Contents/MacOS/emacs -nw'
-    alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nq "$@"'
+    alias em='/usr/local/bin/emacs -nw'
+    alias emc='/usr/local/bin/emacsclient -nq "$@"'
 fi
 
 

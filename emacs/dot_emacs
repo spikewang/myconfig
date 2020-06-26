@@ -595,7 +595,7 @@
  '(me\.alpheus/gotags-tags-file "~/go/src/GOTAGS")
  '(package-selected-packages
    (quote
-    (yaml-mode ## go tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
+    (terraform-mode yaml-mode ## go tangotango-theme magit git-commit markdown-mode go-scratch ack zenburn-theme powerline markdown-mode+ go-mode)))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(tool-bar-mode nil))

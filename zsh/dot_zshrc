@@ -18,7 +18,7 @@ kernel=`uname -s`
 export PATH="/sbin:/usr/sbin:/usr/local/sbin:$PATH"
 
 if [ $kernel = "Darwin" ]; then
-    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
     export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 fi
 
@@ -157,6 +157,35 @@ setopt HIST_SAVE_NO_DUPS
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
+#
+# K8S
+#
+alias kcg='kubectl config get-contexts'
+alias kcu='kubectl config use-context'
+
+set_kubeconfig() {
+    KUBECONFIG=$HOME/.kube/config
+
+    if [ -d $KUBECONFIG ]; then
+        echo "$KUBECONFIG doesn't exist"
+        return
+    fi
+
+    for file in $HOME/.kube/config.d/*
+    do
+        KUBECONFIG=$KUBECONFIG:$file
+    done
+    export KUBECONFIG=$KUBECONFIG
+    which kubeon > /dev/null && kubeon
+}
+
+unset_kubeconfig() {
+    unset KUBECONFIG
+    which kubeoff > /dev/null && kubeoff
+}
+
+set_kubeconfig
+
 
 #
 # LESS
@@ -180,22 +209,3 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 export ZSH_TMUX_AUTOSTART=true
 
 
-#
-# KUBECONFIG
-#
-set_kubeconfig() {
-    KUBECONFIG=$HOME/.kube/config
-    for file in $HOME/.kube/config.d/*
-    do
-        KUBECONFIG=$KUBECONFIG:$file
-    done
-    export KUBECONFIG=$KUBECONFIG
-    which kubeon > /dev/null && kubeon
-}
-
-unset_kubeconfig() {
-    unset KUBECONFIG
-    which kubeoff > /dev/null && kubeoff
-}
-
-set_kubeconfig

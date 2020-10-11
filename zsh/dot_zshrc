@@ -22,13 +22,16 @@ if [ $kernel = "Darwin" ]; then
     export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 fi
 
+
+ZSH_DISABLE_COMPFIX=true
+
 #
 # OH-MY-ZSH
 #
 # Path to your oh-my-zsh installation.
 #
 if [ $kernel = "Darwin" ]; then
-    export ZSH=/Users/spwang/.oh-my-zsh
+    export ZSH=/Users/spike/.oh-my-zsh
 fi
 
 #
@@ -165,16 +168,16 @@ alias kcu='kubectl config use-context'
 
 set_kubeconfig() {
     KUBECONFIG=$HOME/.kube/config
+    KUBECONFIG_D=$HOME/.kube/config.d
 
-    if [ -d $KUBECONFIG ]; then
-        echo "$KUBECONFIG doesn't exist"
-        return
-    fi
+    [ ! -d "$KUBECONFIG_D" ] && echo "Directory $KUBECONFIG_D DOES NOT exists" && return
+    [ "$(ls -A $KUBECONFIG_D)" ] || return
 
-    for file in $HOME/.kube/config.d/*
+    for file in $KUBECONFIG_D/*
     do
         KUBECONFIG=$KUBECONFIG:$file
     done
+
     export KUBECONFIG=$KUBECONFIG
     which kubeon > /dev/null && kubeon
 }

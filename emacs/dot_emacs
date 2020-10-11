@@ -166,9 +166,9 @@
 ;; no point to use it only for window mode.
 ;;
 ;;(when window-system
-;;(load-theme 'zenburn t))
+(load-theme 'zenburn t)
 ;;
-(load-theme 'tangotango t)
+;;(load-theme 'tangotango t)
 ;;(set-face-attribute 'region nil :background "#797979")
 
 

@@ -32,6 +32,8 @@ ZSH_DISABLE_COMPFIX=true
 #
 if [ $kernel = "Darwin" ]; then
     export ZSH=/Users/spike/.oh-my-zsh
+else
+    export ZSH=/home/spike/.oh-my-zsh
 fi
 
 #

@@ -380,9 +380,9 @@
 ;;
 ;; A mode to simulate the powerline feature in Vim.
 ;;
-(require 'powerline)
-(powerline-default-theme)
-(setq powerline-arrow-shape 'arrow)   ;; the default
+;;(require 'powerline)
+;;(powerline-default-theme)
+;;(setq powerline-arrow-shape 'arrow)   ;; the default
 
 
 ;;
@@ -391,7 +391,7 @@
 ;; Save the last visited position in the file and redirect the file to be used
 ;; to our .emacs.d directory
 ;;
-(setq-default save-place t)
+(setq-default save-place-mode t)
 (setq save-place-file "~/.emacs.d/saveplace")
 (require 'saveplace)
 

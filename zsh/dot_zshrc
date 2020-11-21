@@ -102,6 +102,14 @@ alias ...='cd ../../../'
 alias ....='cd ../../../../'
 
 #
+# Docker
+#
+ak-login() {
+    aws --region us-west-2 ecr get-login-password |
+        docker login --username AWS --password-stdin 377913559115.dkr.ecr.us-west-2.amazonaws.com
+}
+
+#
 # LANG
 #
 export LANG=en_US.UTF-8
@@ -212,5 +220,7 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 # TMUX
 #
 export ZSH_TMUX_AUTOSTART=true
+
+
 
 

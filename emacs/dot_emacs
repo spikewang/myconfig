@@ -115,14 +115,15 @@
 ;;
 (global-set-key (kbd "C-c j")    'just-one-space) ;; Delete all spaces except one
 (global-set-key (kbd "C-x C-b")  'ibuffer)
-(global-set-key (kbd "C-x [")      'previous-buffer)
-(global-set-key (kbd "C-x ]")      'next-buffer)
+(global-set-key (kbd "C-x [")    'previous-buffer)
+(global-set-key (kbd "C-x ]")    'next-buffer)
 (global-set-key (kbd "M-o")      'other-window)
 (global-set-key (kbd "\C-c\C-k") 'kill-region)
 (global-set-key (kbd "\C-w")     'backward-kill-word)
 (global-set-key (kbd "\C-x\C-k") 'kill-region)
 (global-set-key (kbd "\C-z")     'repeat)
 (global-set-key (kbd "\C-x\C-g") 'goto-line)
+(global-set-key (kbd "C-x w") 'cua-rectangle-mark-mode)
 
 
 ;;

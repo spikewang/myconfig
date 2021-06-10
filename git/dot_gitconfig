@@ -1,0 +1,12 @@
+[user]
+	name = Spike Wang
+	email = spike@alkira.com
+	signingkey = E5BA084C1F90827C
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+
+[url "ssh://git@bitbucket.org/"]
+	insteadOf = https://bitbucket.org/
+[commit]
+	gpgsign = true

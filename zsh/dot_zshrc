@@ -15,10 +15,10 @@ kernel=`uname -s`
 #
 # PATH & MANPATH
 #
-export PATH="/sbin:/usr/sbin:/usr/local/sbin:$PATH"
+export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/homebrew/bin:$PATH"
 
 if [ $kernel = "Darwin" ]; then
-    export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/coreutils/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH"
     export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 fi
 
@@ -88,7 +88,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(web-search tmux urltools)
+plugins=(web-search urltools)
 
 source $ZSH/oh-my-zsh.sh
 

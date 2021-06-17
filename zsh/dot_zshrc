@@ -135,6 +135,8 @@ alias dir='ls -l'
 if [ $kernel = "Darwin" ]; then
     alias em='/usr/local/bin/emacs -nw'
     alias emc='/usr/local/bin/emacsclient -nq "$@"'
+else
+    alias em='emacs -nw'
 fi
 
 
